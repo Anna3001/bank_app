@@ -1,0 +1,79 @@
+<%# <label for="email">Enter Email:</label>
+<input type="text" id="email" placeholder="Enter email">
+
+<button onclick="openLink()">Login</button> %>
+
+<div class="bg-white rounded-lg py-5">
+  <div class="container flex flex-col mx-auto bg-white rounded-lg pt-12 my-5">
+    <div class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable">
+      <div class="flex items-center justify-center w-full lg:p-12">
+        <div class="flex items-center xl:p-10">
+        <div class="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl">
+          <form>
+            <h3 class="mb-12 text-4xl font-bold text-dark-grey-900">Login to SecurePay</h3>
+
+            <div class="mb-7 flex flex-col">
+              <label for="email" class="mb-8 text-start text-xl text-grey-900">Enter your email:</label>
+              <input id="email" type="text" class="w-full h-12 px-3 py-2 text-sm font-medium outline-none focus:bg-gray-200 mb-2 bg-gray-100 text-dark-grey-900 rounded-2xl"/>
+            </div>
+            </form>
+            <button onclick="validateAndOpenLink()" class="w-36 px-6 py-5 mb-5 text-sm font-bold leading-none text-white transition duration-300 ml-auto rounded-2xl hover:bg-purple-blue-600 focus:ring-4 focus:ring-purple-blue-100 bg-purple-blue-500">Login</button>
+            <p id="email-error" class="text-red-500 hidden mb-5">Please enter a valid email address.</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%# <script>
+    function openLink() {
+      // Get the parameter value from the input field
+      var parameterValue = document.getElementById('email').value;
+
+      // Check if a parameter is entered
+      if (parameterValue.trim() !== '') {
+        // Construct the URL with the parameter
+        var url = 'users/sign_in?email=' + parameterValue;
+
+        // Open the new link in a new tab or window
+       window.location.href = url;
+
+      } else {
+        alert('Please enter a parameter.');
+      }
+    }
+</script> %>
+
+<script>
+  function validateAndOpenLink() {
+    // Get the parameter value from the input field
+    var parameterValue = document.getElementById('email').value;
+
+    // Check if a parameter is entered
+    if (parameterValue.trim() !== '') {
+      // Validate the email format
+      if (isValidEmail(parameterValue)) {
+        // Construct the URL with the parameter
+        var url = 'users/sign_in?email=' + parameterValue;
+
+        // Open the new link in a new tab or window
+        window.location.href = url;
+      } else {
+        // Display an error message for invalid email format
+        document.getElementById('email-error').style.display = 'block';
+      }
+    } else {
+      // Display an error message for empty parameter
+      alert('Please enter an email address.');
+    }
+  }
+
+  function isValidEmail(email) {
+    // Simple email validation using a regular expression
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+</script>

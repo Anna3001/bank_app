@@ -1,0 +1,12 @@
+<% if user_signed_in? %>
+  <p>Welcome,
+    <%= current_user.email %>!</p>
+  <%= link_to "Home", "/" %>
+  <%= link_to "Payments", "/transfers" %>
+  <%= link_to "My account", "/my_account"  %>
+  <%= link_to "Settings", "/users/edit" %>
+  <%= link_to "Log out", "/users/sign_out" %>
+<% else %>
+  <%= link_to "Login", "/get_email", class: "hover:underline mt-20 ml-30 bg-purple-blue-500 w-36 px-6 py-5 font-bold leading-none text-white transition duration-300 rounded-2xl hover:text-white hover:bg-purple-blue-600 focus:ring-4 focus:ring-purple-blue-100" %>
+  <%# <%= link_to "Register", "/users/sign_up" %> 
+<% end %>

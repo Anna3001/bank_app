@@ -1,0 +1,75 @@
+    <div class="bg-white rounded-lg py-5">    
+        <div class="container flex flex-col mx-auto bg-white rounded-lg pt-12 my-5">
+           <div class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable">
+      <div class="flex items-center justify-center w-full lg:p-12">
+        <div class="flex items-center xl:p-10">
+        <div class="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl">
+  
+
+  <% if @user.access_locked? || @info != "" %>
+    <div class="bg-white">
+      <p class="mb-12 text-4xl font-bold text-dark-grey-900">Your access has been locked.</p>
+      <p class="mb-12 text-4xl font-bold text-dark-grey-900">We have sent you an email to reset your password
+      </p>
+      <p>Look at the console</p>
+    </div>     
+  <% else %>
+  
+  <h3 class="mb-12 text-4xl font-bold text-dark-grey-900">Login to SecurePay</h3> 
+  <h2 class="mb-2 ml-2 text-xl text-start text-grey-900">Enter selected password characters for customer
+    <%= params[:email] %></h2>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="field">
+        <br/>
+        <%= f.hidden_field :email, value: params[:email] %>
+      </div>
+
+      <div class="combinations">
+      <%= f.hidden_field :positions, value: @combination.positions %>
+
+      <% @l.times do |index| %>
+        <% if @combination.positions.split(',').map(&:to_i).include?(index) %>
+          <%= f.password_field "password_chars[#{index}]", value: '',placeholder: "?", maxlength: 1, size: 2, class: "px-3 mx-2 py-2 text-sm w-8 h-12 mb-7 bg-gray-100 rounded-2xl" %>
+        <% else %>
+          <%= f.text_field "password_chars[#{index}]", value: '', maxlength: 1, size: 2, disabled: true, class: "w-8 h-12 mb-7 mx-2  bg-gray-400 rounded-2xl" %>
+        <% end %>
+      <% end %>
+
+      <% @left.times do |idx| %>
+          <%= f.text_field "password_chars[#{idx}]", value: '', placeholder: idx, maxlength: 1, size: 2, disabled: true, class: "w-8 h-12 mb-7 mx-2 text-black bg-gray-400 rounded-2xl" %>
+      <% end %>
+      
+      </div>
+
+      <div class="actions hover:underline bg-purple-blue-500 w-36 px-6 py-5 mb-5 font-bold leading-none text-white transition duration-300 ml-auto rounded-2xl hover:text-white hover:bg-purple-blue-600 focus:ring-4 focus:ring-purple-blue-100">
+        <%= f.submit "Login", class: "text-sm"%>
+      </div>
+
+    <% end %>
+  <% end %>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var passwordLength = '<%= @l %>';
+      var passwordFields = document.querySelectorAll('.password-field');
+      var positions = '<%= @combination.positions %>'.split(',').map(Number);
+
+      passwordFields.forEach(function(field, index) {
+        if (index < passwordLength) {
+          if (positions.includes(index)) {
+            field.disabled = false;
+          }
+
+          field.style.visibility = 'visible';
+        } else {
+          field.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

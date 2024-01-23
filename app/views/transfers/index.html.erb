@@ -1,0 +1,191 @@
+<main class="min-h-screen w-full bg-white text-gray-700" x-data="layout">
+    <!-- header page -->
+    <header class="flex w-full w-auto items-center justify-between bg-purple-blue-500 p-2 text-white">
+        <!-- logo -->
+        <div class="flex items-center space-x-2">
+            <button type="button" class="text-3xl pt-1.5" @click="asideOpen = !asideOpen"><ion-icon name="menu-outline"></ion-icon></button>
+            <div>SecurePay</div>
+        </div>
+
+        <!-- button profile -->
+        <div>
+            <%= link_to "/users/sign_out", method: :delete, class: "text-2xl h-9 w-9 overflow-hidden rounded-full" do %>
+              <ion-icon name="log-out-outline"></ion-icon>
+            <% end %>
+
+            <div class="absolute right-2 mt-1 w-48 divide-y  rounded-md  bg-white"
+                x-show="profileOpen" x-transition>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside class="flex w-72 flex-col space-y-2 bg-white p-2" style="height: 90.5vh"
+            x-show="asideOpen">
+            <%= link_to "/", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="home-outline"></ion-icon></span>
+              <span>Home</span>
+            <% end %>
+
+            <%= link_to "/transfers", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="card-outline"></ion-icon></span>
+              <span>Payments</span>
+            <% end %>
+
+            <%= link_to "/my_account", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="person-outline"></ion-icon></span>
+              <span>My account</span>
+            <% end %>
+          
+          <%= link_to "/users/edit", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+            <span class="text-2xl pt-1.5"><ion-icon name="settings-outline"></ion-icon></span>
+            <span>Settings</span>
+          <% end %>
+        </aside>
+
+        <!-- main content page -->
+<div class="w-full h-auto min-h-screen bg-white border-l-2 border-dark-grey-900">
+                
+<div class="p-20 mx-auto">
+
+<div class="pb-20">
+  <%= link_to "New transfer", "/transfers/new", 
+  class: "bg-purple-blue-500 w-36 px-6 py-5 font-bold leading-none text-white transition duration-300 ml-auto rounded-2xl hover:text-white hover:bg-purple-blue-600 focus:ring-4 focus:ring-purple-blue-100" %>
+</div>
+
+	<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <h2 class="mb-3 font-bold">Sent transfers</h2>
+			<table class="w-full text-sm text-left text-gray-500">
+				<thead class="text-sm text-gray-900 bg-gray-100">
+					<tr>
+						<th scope="col" class="px-6 py-3">
+							Title
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Amount
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Reciever name
+						</th>
+            <th scope="col" class="px-6 py-3">
+							Reciever account
+						</th>
+            <th scope="col" class="px-6 py-3">
+							Reciever address
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Date
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+
+        <% @transfers_sent.each do |transfer| %>
+					<tr
+						class="bg-white border-b hover:bg-gray-50">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+							<%= transfer.title %></p>
+						</th>
+						<td class="px-6 py-4 text-gray-900">
+							<%= transfer.amount %></p>
+						</td>
+						<td class="px-6 py-4 text-gray-900 ">
+							<%= transfer.name %>
+						</td>
+						<td class="px-6 py-4 text-gray-900">
+							<%= transfer.receiver_account_number %></p>
+						</td>
+            <td class="px-6 py-4 text-gray-900">
+							<%= transfer.address %>
+						</td>
+            <td class="px-6 py-4 text-gray-900">
+							<%= transfer.updated_at %>
+						</td>  
+					</tr>
+          <% end %>
+				</tbody>
+			</table>
+		</div>
+
+    <div class="text-gray-900 text-center mt-4">
+    <%= will_paginate @transfers_sent, param_name: 'sent_page', previous_label: 'Previous', next_label: 'Next' %>
+    </div>
+
+    <div class="relative mt-16 overflow-x-auto shadow-md sm:rounded-lg">
+    <h2 class="mb-3 font-bold">Received transfers</h2>
+			<table class="w-full text-sm text-left text-gray-500">
+				<thead class="text-sm text-gray-900 bg-gray-100">
+					<tr>
+						<th scope="col" class="px-6 py-3">
+							Title
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Amount
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Reciever name
+						</th>
+            <th scope="col" class="px-6 py-3">
+							Sender account
+						</th>
+            <th scope="col" class="px-6 py-3">
+							My address
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Date
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+
+        <% @transfers_received.each do |transfer| %>
+					<tr
+						class="bg-white border-b hover:bg-gray-50">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+							<%= transfer.title %></p>
+						</th>
+						<td class="px-6 py-4 text-gray-900">
+							<%= transfer.amount %></p>
+						</td>
+						<td class="px-6 py-4 text-gray-900 ">
+							ME
+						</td>
+						<td class="px-6 py-4 text-gray-900">
+							<%= transfer.sender_account_number %></p>
+						</td>
+            <td class="px-6 py-4 text-gray-900">
+							<%= transfer.address %>
+						</td>
+            <td class="px-6 py-4 text-gray-900">
+							<%= transfer.created_at %>
+						</td>  
+					</tr>
+          <% end %>
+				</tbody>
+			</table>
+		</div>
+  
+    <div class="text-gray-900 text-center mt-4">
+    <%= will_paginate @transfers_received, param_name: 'received_page', previous_label: 'Previous', next_label: 'Next' %>
+    </div>
+  </div>
+
+
+
+
+                </div>
+        
+    </div>
+</main>
+
+<script>
+    document.addEventListener("alpine:init", () => {
+        Alpine.data("layout", () => ({
+            profileOpen: false,
+            asideOpen: true,
+        }));
+    });
+</script>
+
+
+

@@ -1,0 +1,142 @@
+<main class="min-h-screen w-full bg-white text-gray-700" x-data="layout">
+    <!-- header page -->
+    <header class="flex w-full items-center justify-between  bg-purple-blue-500 p-2 text-white">
+        <!-- logo -->
+        <div class="flex items-center space-x-2">
+            <button type="button" class="text-3xl pt-1.5" @click="asideOpen = !asideOpen"><ion-icon name="menu-outline"></ion-icon></button>
+            <div>SecurePay</div>
+        </div>
+
+        <!-- button profile -->
+        <div>
+            <%= link_to "/users/sign_out", method: :delete, class: "text-2xl h-9 w-9 overflow-hidden rounded-full" do %>
+              <ion-icon name="log-out-outline"></ion-icon>
+            <% end %>
+
+            <div class="absolute right-2 mt-1 w-48 divide-y  rounded-md  bg-white"
+                x-show="profileOpen" x-transition>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-full my-auto">
+        <aside class="flex w-72 flex-col space-y-2 bg-white p-2" style="height: 90.5vh"
+            x-show="asideOpen">
+            <%= link_to "/", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="home-outline"></ion-icon></span>
+              <span>Home</span>
+            <% end %>
+
+            <%= link_to "/transfers", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="card-outline"></ion-icon></span>
+              <span>Payments</span>
+            <% end %>
+
+            <%= link_to "/my_account", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="person-outline"></ion-icon></span>
+              <span>My account</span>
+            <% end %>
+          
+          <%= link_to "/users/edit", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+            <span class="text-2xl pt-1.5"><ion-icon name="settings-outline"></ion-icon></span>
+            <span>Settings</span>
+          <% end %>
+        </aside>
+
+<!-- main content page -->
+<div class="w-full p-4 bg-white border-l-2 border-dark-grey-900">
+
+<div class="">    
+    <div class="container flex flex-col mx-auto">
+        <div class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable">
+            <div class="flex items-center justify-center w-full lg:p-12">
+                <div class="flex items-center xl:p-10">
+                  <div class="flex flex-col w-full h-full pb-6 text-center">
+
+
+          <h3 class="mb-3 text-4xl font-bold text-dark-grey-900">Make a new trasfer</h3>
+                        <p class="mb-7 text-grey-700">Fill in all fields</p>
+
+              <% if @transfer.errors.any? %>
+                <div class="bg-red-100 text-red-700 p-2 mb-7 rounded">
+                  <strong>Error:</strong>
+                  <ul>
+                    <% @transfer.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+<%= form_with(model: @transfer, url: transfers_path, method: :post) do |form| %>
+  <div class="field flex flex-col">
+    <%= form.label :title, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :title, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl", maxlength: 45 %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= form.label :amount, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :amount, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl" %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= form.label :receiver_account_number, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :receiver_account_number, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl", maxlength: 26 %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= form.label :name, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :name, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl", maxlength: 45 %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= form.label :address, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :address, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl", maxlength: 50 %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= form.label :sender_account_number, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= form.text_field :sender_account_number,
+                    readonly: true,
+                    value: current_user.account_no, class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl" %>
+  </div>
+
+              <%= form.hidden_field :user_id, value: current_user.id %>
+
+
+              <div>
+                <%= form.submit "Create Transfer" %>
+              </div>
+            <% end %>
+                
+                  </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+                </div>
+      <!-- main content page -->           
+
+
+    </div>
+</main>
+
+<script>
+    document.addEventListener("alpine:init", () => {
+        Alpine.data("layout", () => ({
+            profileOpen: false,
+            asideOpen: true,
+        }));
+    });
+</script>
+
+
+
+
+
+
+

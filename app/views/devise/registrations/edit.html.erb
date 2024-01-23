@@ -1,0 +1,185 @@
+<main class="min-h-screen w-full bg-white text-gray-700" x-data="layout">
+    <!-- header page -->
+    <header class="flex w-full items-center justify-between  bg-purple-blue-500 p-2 text-white">
+        <!-- logo -->
+        <div class="flex items-center space-x-2">
+            <button type="button" class="text-3xl pt-1.5" @click="asideOpen = !asideOpen"><ion-icon name="menu-outline"></ion-icon></button>
+            <div>SecurePay</div>
+        </div>
+
+        <!-- button profile -->
+        <div>
+            <%= link_to "/users/sign_out", method: :delete, class: "text-2xl h-9 w-9 overflow-hidden rounded-full" do %>
+              <ion-icon name="log-out-outline"></ion-icon>
+            <% end %>
+
+            <div class="absolute right-2 mt-1 w-48 divide-y  rounded-md  bg-white"
+                x-show="profileOpen" x-transition>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-full my-auto">
+        <aside class="flex w-72 flex-col space-y-2 bg-white p-2" style="height: 90.5vh"
+            x-show="asideOpen">
+            <%= link_to "/", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="home-outline"></ion-icon></span>
+              <span>Home</span>
+            <% end %>
+
+            <%= link_to "/transfers", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="card-outline"></ion-icon></span>
+              <span>Payments</span>
+            <% end %>
+
+            <%= link_to "/my_account", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+              <span class="text-2xl pt-1.5"><ion-icon name="person-outline"></ion-icon></span>
+              <span>My account</span>
+            <% end %>
+          
+          <%= link_to "/users/edit", class: "flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600" do %>
+            <span class="text-2xl pt-1.5"><ion-icon name="settings-outline"></ion-icon></span>
+            <span>Settings</span>
+          <% end %>
+        </aside>
+
+<!-- main content page -->
+<div class="w-full p-4 bg-white border-l-2 border-dark-grey-900">
+
+<div class="">    
+    <div class="container flex flex-col mx-auto">
+        <div class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable">
+            <div class="flex items-center justify-center w-full lg:p-12">
+                <div class="flex items-center xl:p-10">
+                  <div class="flex flex-col w-full h-full pb-6 text-center">
+
+
+          <h2 class="mb-3 text-4xl font-bold text-dark-grey-900">User data edition</h2>
+          <p class="mb-10 text-grey-700">Change your data</p>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <% if resource.errors[:password].any? %>
+    <div class="text-red-500 text-sm mt-2">
+      <%= resource.errors[:password].first %>
+    </div>
+  <% end %>
+
+  <div class="field flex flex-col">
+    <%= f.label :email, class: "mb-2 text-xl text-start text-grey-900" %><br/>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl" %>
+  </div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>Currently waiting confirmation for:
+      <%= resource.unconfirmed_email %></div>
+  <% end %>
+
+  <div class="field flex flex-col">
+    <%= f.label :password, class: "mb-2 text-xl text-start text-grey-900" %> 
+    <%= f.password_field :password, autocomplete: "new-password", class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 bg-gray-100 text-dark-grey-900 rounded-2xl", onchange: "updateEntropy(this.value)" %>
+    <i class="text-sm text-start text-grey-900 mb-7 mt-2">(leave blank if you don't want to change it)</i><br/>
+    
+  </div>
+
+    <div class="relative pt-1">
+    <div class="flex mb-2 items-center justify-between">
+      <div>
+      </div>
+      <div class="text-right">
+        <div id="entropyDisplay" class="text-xs font-semibold inline-block text-blue-600"></div>
+      </div>
+    </div>
+    <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+      <div id="progressBar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-blue-500" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= f.label :password_confirmation, class: "mb-2 text-xl text-start text-grey-900" %><br/>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 mb-7 bg-gray-100 text-dark-grey-900 rounded-2xl" %>
+  </div>
+
+  <div class="field flex flex-col">
+    <%= f.label :current_password, class: "mb-2 text-xl text-start text-grey-900" %>
+    <%= f.password_field :current_password, autocomplete: "current-password", class: "flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 bg-gray-100 text-dark-grey-900 rounded-2xl" %>
+    <i class="mb-7 mt-2 text-sm text-start text-grey-900">(we need your current password to confirm your changes)</i><br/>
+  </div>
+
+  <div class="actions bg-purple-blue-500 w-36 px-6 py-5 mb-5 font-bold leading-none text-white transition duration-300 ml-auto rounded-2xl hover:text-white hover:bg-purple-blue-600 focus:ring-4 focus:ring-purple-blue-100">
+    <%= f.submit "Update", class: "text-sm" %>
+  </div>
+
+<% end %>
+
+      <div class="mt-7 text-xl">
+        <p>Unhappy?</p>
+        <%= button_to "Cancel my account",
+        registration_path(resource_name),
+        data: {
+          confirm: "Are you sure?",
+          turbo_confirm: "Are you sure?",
+        },
+        method: :delete,
+        class: "text-red-500 text-sm"
+        %>
+        
+        </div>
+                
+                  </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+                </div>
+      <!-- main content page -->           
+
+    </div>
+</main>
+
+<script>
+    document.addEventListener("alpine:init", () => {
+        Alpine.data("layout", () => ({
+            profileOpen: false,
+            asideOpen: true,
+        }));
+    });
+</script>
+
+<script>
+  function updateEntropy(password) {
+    const entropy = calculateEntropy(password);
+    const progressBar = document.getElementById('progressBar');
+    const entropyPercentage = (entropy / 3.4) * 100;
+
+    progressBar.style.width = `${entropyPercentage}%`;
+    document.getElementById('entropyDisplay').innerText = `Entropy: ${entropy}. Min entropy is 3.4`;
+  }
+
+  function calculateEntropy(password) {
+  const passwordLength = password.length;
+
+  const characterCounts = {};
+  for (const char of password) {
+    characterCounts[char] = (characterCounts[char] || 0) + 1;
+  }
+
+  // Transform stats to probability
+  const probabilities = Object.fromEntries(
+    Object.entries(characterCounts).map(([char, count]) => [char, count / passwordLength])
+  );
+
+  // H = −∑pi⋅log2(pi)
+  const entropy = -Object.values(probabilities).reduce((sum, prob) => sum + prob * Math.log2(prob), 0);
+
+  return entropy.toFixed(2);
+}
+</script>
+
+
+
